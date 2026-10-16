@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0c1220">
+    <meta name="description" content="An interactive preview of a secure, multi-AZ AWS VPC architecture.">
+    <title>VPC Sentinel — Secure Network Overview</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Main navigation">
+        <a class="brand" href="#overview" aria-label="VPC Sentinel home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M16 3.5 27 9.7v12.6l-11 6.2-11-6.2V9.7l11-6.2Z" stroke="currentColor" stroke-width="1.8"/>
+              <path d="m10.5 16 3.6 3.6 7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="brand-copy"><strong>VPC Sentinel</strong><small>NETWORK OVERVIEW</small></span>
+        </a>
+
+        <p class="nav-label">WORKSPACE</p>
+        <nav class="nav-links">
+          <a class="nav-link active" href="#overview" aria-current="page">
+            <span class="nav-icon" aria-hidden="true">◫</span> Overview
+          </a>
+          <a class="nav-link" href="#topology">
+            <span class="nav-icon" aria-hidden="true">⌘</span> Architecture
+          </a>
+          <a class="nav-link" href="#security">
+            <span class="nav-icon" aria-hidden="true">◇</span> Security controls
+          </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div class="environment-card">
+            <span class="environment-dot"></span>
+            <span><strong>Design preview</strong><small>Not connected to AWS</small></span>
+            <span class="preview-tag">DEMO</span>
+          </div>
+          <div class="profile">
+            <div class="avatar" aria-hidden="true">VS</div>
+            <span><strong>VPC workspace</strong><small>Architecture team</small></span>
+            <span class="profile-menu" aria-hidden="true">···</span>
+          </div>
+        </div>
+      </aside>
+
+      <main id="overview" class="main-content">
+        <header class="topbar">
+          <div class="breadcrumbs"><span>Workspace</span><span aria-hidden="true">/</span><strong>Overview</strong></div>
+          <div class="topbar-actions">
+            <span class="preview-status"><span id="connection-dot" class="status-dot"></span><span id="connection-label">AWS data not loaded</span></span>
+            <button class="icon-button" type="button" aria-label="Help" title="AWS inventory is read-only. The architecture diagram is an illustrative design preview.">?</button>
+          </div>
+        </header>
+
+        <div class="page-wrap">
+          <section class="page-heading">
+            <div>
+              <p class="eyebrow">NETWORK / AWS</p>
+              <h1>Secure VPC overview</h1>
+              <p class="heading-description">Inspect live AWS network resources with read-only access. The architecture diagram below is an illustrative design preview.</p>
+            </div>
+            <button id="aws-connect" class="primary-button" type="button"><span aria-hidden="true">↗</span> Load AWS data</button>
+          </section>
+
+          <section class="metrics" aria-label="Architecture summary">
+            <article class="metric-card">
+              <div class="metric-top"><span>VPC CIDR</span><span class="metric-icon violet" aria-hidden="true">⌗</span></div>
+              <strong class="metric-value">10.20.0.0<span>/16</span></strong>
+              <small class="metric-foot"><span class="tiny-dot green"></span> IPv4 address space</small>
+            </article>
+            <article class="metric-card">
+              <div class="metric-top"><span>Availability zones</span><span class="metric-icon blue" aria-hidden="true">▦</span></div>
+              <strong class="metric-value">2 <span class="metric-unit">zones</span></strong>
+              <small class="metric-foot"><span class="tiny-dot green"></span> Resilient by design</small>
+            </article>
+            <article class="metric-card">
+              <div class="metric-top"><span>Network segments</span><span class="metric-icon teal" aria-hidden="true">▤</span></div>
+              <strong class="metric-value">6 <span class="metric-unit">subnets</span></strong>
+              <small class="metric-foot"><span class="tiny-dot blue-dot"></span> Public, app &amp; data tiers</small>
+            </article>
+            <article class="metric-card">
+              <div class="metric-top"><span>Inbound app path</span><span class="metric-icon amber" aria-hidden="true">↗</span></div>
+              <strong class="metric-value">HTTPS <span class="metric-unit">only</span></strong>
+              <small class="metric-foot"><span class="tiny-dot green"></span> Via application load balancer</small>
+            </article>
+          </section>
+
+          <section id="topology" class="panel topology-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">NETWORK MAP</p>
+                <h2>VPC architecture</h2>
+                <p class="panel-subtitle">Illustrative topology; load AWS data to inspect real VPC resources and network rules.</p>
+              </div>
+              <button id="routes-toggle" class="secondary-button" type="button" aria-pressed="false">
+                <span aria-hidden="true">⌁</span> <span id="routes-label">Show traffic paths</span>
+              </button>
+            </div>
+
+            <div class="map-legend" aria-label="Diagram legend">
+              <span><i class="legend-swatch public"></i> Public subnet</span>
+              <span><i class="legend-swatch private"></i> Private subnet</span>
+              <span><i class="legend-line"></i> Network flow</span>
+            </div>
+
+            <div class="architecture" aria-label="VPC topology diagram">
+              <div class="internet-node">
+                <span class="internet-icon" aria-hidden="true">◎</span>
+                <strong>Internet</strong>
+              </div>
+              <div class="vpc-boundary">
+                <div class="vpc-title">
+                  <span><strong>Production VPC</strong><small>10.20.0.0/16</small></span>
+                  <span class="vpc-badge"><span class="tiny-dot green"></span> 2 AZs</span>
+                </div>
+                <div class="gateway-row">
+                  <span class="gateway-node"><span aria-hidden="true">⇄</span> Internet Gateway</span>
+                  <span class="connector" aria-hidden="true"></span>
+                </div>
+                <div class="az-grid">
+                  <section class="az-column" aria-label="Availability Zone A">
+                    <div class="az-heading"><strong>Availability Zone A</strong><span>us-east-1a</span></div>
+                    <div class="subnet public-subnet">
+                      <div class="subnet-heading"><span>PUBLIC SUBNET</span><span>10.20.0.0/24</span></div>
+                      <div class="resource-node"><span class="resource-icon alb" aria-hidden="true">⇄</span><span><strong>Load balancer</strong><small>HTTPS :443</small></span><span class="node-status">Public</span></div>
+                      <div class="resource-node"><span class="resource-icon bastion" aria-hidden="true">▣</span><span><strong>Bastion host</strong><small>SSH :22 · restricted</small></span><span class="node-status">Admin</span></div>
+                      <div class="resource-node"><span class="resource-icon nat" aria-hidden="true">↗</span><span><strong>NAT gateway A</strong><small>Outbound only</small></span></div>
+                    </div>
+                    <div class="subnet private-subnet app-subnet">
+                      <div class="subnet-heading"><span>PRIVATE APP SUBNET</span><span>10.20.10.0/24</span></div>
+                      <div class="resource-node"><span class="resource-icon app" aria-hidden="true">▤</span><span><strong>Web app</strong><small>App port · no public IP</small></span><span class="node-status protected">Private</span></div>
+                    </div>
+                    <div class="subnet private-subnet data-subnet">
+                      <div class="subnet-heading"><span>PRIVATE DATA SUBNET</span><span>10.20.20.0/24</span></div>
+                      <div class="resource-node"><span class="resource-icon data" aria-hidden="true">▦</span><span><strong>Database</strong><small>App access only</small></span><span class="node-status protected">Isolated</span></div>
+                    </div>
+                  </section>
+                  <section class="az-column" aria-label="Availability Zone B">
+                    <div class="az-heading"><strong>Availability Zone B</strong><span>us-east-1b</span></div>
+                    <div class="subnet public-subnet">
+                      <div class="subnet-heading"><span>PUBLIC SUBNET</span><span>10.20.1.0/24</span></div>
+                      <div class="resource-node"><span class="resource-icon alb" aria-hidden="true">⇄</span><span><strong>Load balancer</strong><small>HTTPS :443</small></span><span class="node-status">Public</span></div>
+                      <div class="resource-node"><span class="resource-icon bastion" aria-hidden="true">▣</span><span><strong>Bastion host</strong><small>SSH :22 · restricted</small></span><span class="node-status">Admin</span></div>
+                      <div class="resource-node"><span class="resource-icon nat" aria-hidden="true">↗</span><span><strong>NAT gateway B</strong><small>Outbound only</small></span></div>
+                    </div>
+                    <div class="subnet private-subnet app-subnet">
+                      <div class="subnet-heading"><span>PRIVATE APP SUBNET</span><span>10.20.11.0/24</span></div>
+                      <div class="resource-node"><span class="resource-icon app" aria-hidden="true">▤</span><span><strong>Web app</strong><small>App port · no public IP</small></span><span class="node-status protected">Private</span></div>
+                    </div>
+                    <div class="subnet private-subnet data-subnet">
+                      <div class="subnet-heading"><span>PRIVATE DATA SUBNET</span><span>10.20.21.0/24</span></div>
+                      <div class="resource-node"><span class="resource-icon data" aria-hidden="true">▦</span><span><strong>Database</strong><small>App access only</small></span><span class="node-status protected">Isolated</span></div>
+                    </div>
+                  </section>
+                </div>
+                <div class="route-note" id="route-note" hidden>
+                  <span class="route-key"><i class="route-line inbound"></i>Inbound: Internet → ALB → app</span>
+                  <span class="route-key"><i class="route-line admin"></i>Admin: approved IP → bastion → app</span>
+                  <span class="route-key"><i class="route-line outbound"></i>Outbound: app → same-AZ NAT → Internet</span>
+                  <span class="route-key"><i class="route-line data"></i>Data: app → database</span>
+                </div>
+              </div>
+            </div>
+            <p class="diagram-note"><span aria-hidden="true">ⓘ</span> Illustrative topology. Resources and CIDRs are examples; this preview is not connected to an AWS account.</p>
+          </section>
+
+          <section id="security" class="bottom-grid">
+            <article class="panel controls-panel">
+              <div class="panel-heading compact-heading">
+                <div><p class="eyebrow">DEFENSE IN DEPTH</p><h2>Security controls</h2></div>
+                <span class="control-count">4 controls</span>
+              </div>
+              <div class="control-list">
+                <div class="control-row"><span class="control-icon shield" aria-hidden="true">◇</span><span><strong>Security groups</strong><small>Allow only required tier-to-tier traffic</small></span><span class="control-state">Planned</span></div>
+                <div class="control-row"><span class="control-icon boundary" aria-hidden="true">⊞</span><span><strong>Network ACLs</strong><small>Subnet-level rules with return traffic</small></span><span class="control-state">Planned</span></div>
+                <div class="control-row"><span class="control-icon access" aria-hidden="true">▣</span><span><strong>Bastion access</strong><small>SSH restricted to trusted admin IPs</small></span><span class="control-state">Planned</span></div>
+                <div class="control-row"><span class="control-icon flow" aria-hidden="true">⌁</span><span><strong>VPC Flow Logs</strong><small>Network traffic visibility and auditing</small></span><span class="control-state">Planned</span></div>
+              </div>
+            </article>
+            <article class="panel traffic-panel">
+              <div class="panel-heading compact-heading">
+                <div><p class="eyebrow">TRAFFIC POLICY</p><h2>Access at a glance</h2></div>
+                <span class="lock-icon" aria-label="Restricted access">⌑</span>
+              </div>
+              <div class="policy-list">
+                <div class="policy-row"><span class="policy-port">443</span><span><strong>HTTPS</strong><small>Internet → load balancer</small></span><span class="allow-tag">ALLOW</span></div>
+                <div class="policy-row"><span class="policy-port">22</span><span><strong>SSH</strong><small>Trusted admin IP → bastion</small></span><span class="allow-tag">RESTRICTED</span></div>
+                <div class="policy-row"><span class="policy-port">APP</span><span><strong>Application</strong><small>Load balancer / bastion → app</small></span><span class="allow-tag">INTERNAL</span></div>
+                <div class="policy-row"><span class="policy-port">DB</span><span><strong>Database</strong><small>App security group → database</small></span><span class="allow-tag">INTERNAL</span></div>
+              </div>
+              <p class="policy-footnote">No direct internet ingress to app or database subnets.</p>
+            </article>
+          </section>
+
+          <footer class="page-footer">
+            <span>VPC Sentinel <span class="footer-divider">·</span> Secure network design preview</span>
+            <a href="#overview">Back to top ↑</a>
+          </footer>
+        </div>
+      </main>
+    </div>
+    <dialog id="aws-dialog" class="aws-dialog" aria-labelledby="aws-dialog-title">
+      <div class="dialog-heading">
+        <div><p class="eyebrow">READ-ONLY AWS CONNECTION</p><h2 id="aws-dialog-title">Explore your VPCs</h2></div>
+        <button id="aws-dialog-close" class="dialog-close" type="button" aria-label="Close">×</button>
+      </div>
+      <p class="dialog-description">Uses the AWS credentials configured on this machine. This preview only reads AWS resources; it will not create or modify them.</p>
+      <form id="aws-region-form" class="region-form">
+        <label for="aws-region">AWS region</label>
+        <div class="region-controls">
+          <input id="aws-region" name="region" value="us-east-1" pattern="[a-z]{2}(-[a-z0-9]+)+-[0-9]+" required maxlength="32" autocomplete="off">
+          <button class="secondary-button" type="submit">Load VPCs</button>
+        </div>
+      </form>
+      <div id="aws-message" class="aws-message" role="status" aria-live="polite">Enter a region and load the VPCs available to your AWS credentials.</div>
+      <div id="aws-content" class="aws-content"></div>
+    </dialog>
+  </body>
+</html>
